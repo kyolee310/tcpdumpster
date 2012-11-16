@@ -42,13 +42,13 @@ print SCR "set key outside top\n";
 print SCR "set border linewidth 2\n";
 print SCR "set xdata time\n";
 print SCR "set timefmt \"%H:%M:%S\"\n";
-print SCR "set xlabel \"MINUTE\"\n";
-print SCR "set format x \"%M\"\n";
-print SCR "set ylabel \"COUNT\"\n";
+print SCR "set xlabel \"TIME\"\n";
+print SCR "set format x \"%H:%M\"\n";
+print SCR "set ylabel \"K.BYTE\"\n";
 #print SCR "set ytics 0, 2\n";
 print SCR "set terminal png size 1200, 800\n";
 print SCR "set output \"" . $png_loc ."\"\n";
-print SCR "plot \"" . $data_loc . "\" using 1:10 title \"Packet Length Total\" with lines\n";
+print SCR "plot \"" . $data_loc . "\" using 1:11 title \"Packet Length Total\" with lines\n";
 print SCR "exit\n";
 
 close( SCR );

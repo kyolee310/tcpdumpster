@@ -22,6 +22,7 @@ open( DUMP, "tcpdump port $port |" ) or die $!;
 my $line;
 
 my $start_time = time;
+my $last_checkout_time = time;
 
 my $this_time = "";
 my $this_line_time = "";
@@ -40,9 +41,13 @@ my $this_dest_port_count = 0;
 
 my $this_count = 0;
 my $this_count_total = 0;
+my $this_count_for_min = 0;
+my $this_count_throughput_for_min = 0;
 
 my $this_length = 0;
 my $this_length_total = 0;
+my $this_length_for_min = 0;
+my $this_length_throughput_for_min = 0;
 
 while($line=<DUMP>){
 	chomp($line);
@@ -68,20 +73,28 @@ while($line=<DUMP>){
 		if( $is_time_changed == 1 ){
 			my $time_taken = time - $start_time;
 
-			my $this_length_in_kilo = 1;
-                        if( $this_length =~ /^(\d+)\d\d\d$/ ){
-                                $this_length_in_kilo = $1;
-                        };
-			my $this_length_total_in_kilo = 1;
-			if( $this_length_total =~ /^(\d+)\d\d\d$/ ){
-				$this_length_total_in_kilo = $1;
+			if( time - $last_checkout_time >= 60 ){
+				$this_count_throughput_for_min = $this_count_for_min / 60.0;
+				$this_count_throughput_for_min = sprintf("%0.3f", $this_count_throughput_for_min);
+				$this_length_throughput_for_min = convert_to_kilo($this_length_for_min) / 60.0;
+				$this_length_throughput_for_min = sprintf("%0.3f", $this_length_throughput_for_min);
+				$last_checkout_time = time;
+				$this_count_for_min = 0;
+				$this_length_for_min = 0;
 			};
+
+			$this_count_for_min += $this_count;
+			$this_length_for_min += $this_length;
+
+			my $this_length_in_kilo = convert_to_kilo($this_length);
+			my $this_length_total_in_kilo = convert_to_kilo($this_length_total);
+			
 			my $throughput = 0;
 			if( $time_taken > 0 ){
 				$throughput = sprintf("%0.3f", $this_length_total_in_kilo / $time_taken);
 			};
 			#print OUTPUT "$this_time $time_taken $this_source_ip_count $this_source_port_count $this_dest_ip_count $this_dest_port_count $this_count $this_count_total $this_length_in_kilo $this_length_total_in_kilo $throughput\n";
-			system("echo \"$this_time $time_taken $this_source_ip_count $this_source_port_count $this_dest_ip_count $this_dest_port_count $this_count $this_count_total $this_length_in_kilo $this_length_total_in_kilo $throughput\" >> $output_list");
+			system("echo \"$this_time $time_taken $this_source_ip_count $this_source_port_count $this_dest_ip_count $this_dest_port_count $this_count $this_count_total $this_count_throughput_for_min $this_length_in_kilo $this_length_total_in_kilo $this_length_throughput_for_min $throughput\" >> $output_list");
 			%this_source_ip_hash = {};
 			%this_dest_ip_hash = {};
 			$this_source_ip_count = 0;
@@ -144,5 +157,16 @@ close(DUMP);
 exit(0);
 
 1;
+
+#################### SUBROUTINE #############################
+
+
+sub convert_to_kilo{
+	my $num = shift @_;
+	if( $num =~ /^(\d+)\d\d\d$/ ){
+		return $1;
+	};
+	return 1;
+};
 
 

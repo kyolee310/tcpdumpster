@@ -16,8 +16,10 @@ my $render_01 = "cd $PLOT_DIR; ./generate_unique_connection_for_ip_graph.pl ../$
 my $render_02 = "cd $PLOT_DIR; ./generate_unique_connection_for_port_graph.pl ../$latest_log_dir";
 my $render_03 = "cd $PLOT_DIR; ./generate_connection_count_graph.pl ../$latest_log_dir";
 my $render_04 = "cd $PLOT_DIR; ./generate_connection_count_total_graph.pl ../$latest_log_dir";
-my $render_05 = "cd $PLOT_DIR; ./generate_packet_length_graph.pl ../$latest_log_dir";
-my $render_06 = "cd $PLOT_DIR; ./generate_packet_length_total_graph.pl ../$latest_log_dir";
+my $render_05 = "cd $PLOT_DIR; ./generate_connection_count_throughput_graph.pl ../$latest_log_dir";
+my $render_06 = "cd $PLOT_DIR; ./generate_packet_length_graph.pl ../$latest_log_dir";
+my $render_07 = "cd $PLOT_DIR; ./generate_packet_length_total_graph.pl ../$latest_log_dir";
+my $render_08 = "cd $PLOT_DIR; ./generate_packet_length_throughput_graph.pl ../$latest_log_dir";
 
 my $copy_graphs_over_to_html = "cp -f $GRAPH_DIR/* $HTML_GRAPH_DIR/.";
 
@@ -31,6 +33,8 @@ while(1){
 	run_cmd($render_04);
 	run_cmd($render_05);
 	run_cmd($render_06);
+	run_cmd($render_07);
+	run_cmd($render_08);
 	
 	run_cmd($copy_graphs_over_to_html);
 

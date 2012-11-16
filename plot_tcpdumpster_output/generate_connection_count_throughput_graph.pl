@@ -14,9 +14,9 @@ if( @ARGV < 1 ){
 
 my $data_dir = shift @ARGV;
 
-my $scr_name = "gnuplot_script_packet_length.script";
+my $scr_name = "gnuplot_script_connection_count_throughput.script";
 my $data_name = "tcpdumpster.output";
-my $png_name = "packet_length.png";
+my $png_name = "connection_count_throughput.png";
 
 my $scr_loc = $gnuplot_scripts_dir . "/" . $scr_name;
 my $png_loc = $graphs_dir . "/" . $png_name;
@@ -29,7 +29,7 @@ if( !(-e "$data_loc" ) ){
 
 
 print "\n";
-print "================= PLOT PACKET LENGTH =====================\n";
+print "================= PLOT CONNECTION COUNT THROUGHPUT =====================\n";
 print "\n";
 
 system("mkdir -p $gnuplot_scripts_dir");
@@ -37,18 +37,18 @@ system("mkdir -p $graphs_dir");
 
 open( SCR, "> $scr_loc" ) or die $!;
 
-print SCR "set title \"TCP-DUMPSTER: PACKET LENGTH\"\n";
+print SCR "set title \"TCP-DUMPSTER: UNIQUE CONNECTION COUNT THROUGHPUT\"\n";
 print SCR "set key outside top\n";
 print SCR "set border linewidth 2\n";
 print SCR "set xdata time\n";
 print SCR "set timefmt \"%H:%M:%S\"\n";
 print SCR "set xlabel \"TIME\"\n";
 print SCR "set format x \"%H:%M\"\n";
-print SCR "set ylabel \"K.BYTE\"\n";
+print SCR "set ylabel \"COUNT\"\n";
 #print SCR "set ytics 0, 2\n";
 print SCR "set terminal png size 1200, 800\n";
 print SCR "set output \"" . $png_loc ."\"\n";
-print SCR "plot \"" . $data_loc . "\" using 1:10 title \"Packet Length\" with lines\n";
+print SCR "plot \"" . $data_loc . "\" using 1:9 title \"Connection Count Total\" with lines\n";
 print SCR "exit\n";
 
 close( SCR );
