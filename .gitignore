@@ -1,4 +1,5 @@
-tcpdumpster.*
+tcpdumpster.out*
 rendered.out
+nohup.*
 *.png
 *.script
